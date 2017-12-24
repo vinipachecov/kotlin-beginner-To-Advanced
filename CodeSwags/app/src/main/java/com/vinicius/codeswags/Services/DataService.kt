@@ -1,4 +1,4 @@
-package com.vinicius.coderswag.Services
+package com.vinicius.codeswags.Services
 
 import com.vinicius.coderswag.Model.Category
 import com.vinicius.coderswag.Model.Product

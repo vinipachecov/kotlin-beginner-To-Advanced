@@ -1,13 +1,14 @@
-package com.vinicius.coderswag.Controller
+package com.vinicius.codeswags.Controller
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.vinicius.coderswag.Adapters.CategoryAdapter
-import com.vinicius.coderswag.R
-import com.vinicius.coderswag.Services.DataService
+import com.vinicius.codeswags.Adapters.CategoryAdapter
+import com.vinicius.codeswags.R
+import com.vinicius.codeswags.Services.DataService
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
 
     lateinit var adapter: CategoryAdapter
 
@@ -19,3 +20,4 @@ class MainActivity : AppCompatActivity() {
         categoryListView.adapter = adapter
     }
 }
+
