@@ -10,12 +10,22 @@ import java.util.*
 
 object DataService {
 
+//    the 'image' string is the name of the image file of the topic
     val categories = listOf(
             Category("SHIRTS", "shirtimage"),
             Category("HOODIES", "hoodieimage"),
-            Category("HATS", "hatsimage"),
-            Category("DIGITAL", "digitalgoodsimage")
+            Category("HATS", "hatimage"),
+            Category("DIGITAL", "digitalgoodsimage"),
+        Category("SHIRTS", "shirtimage"),
+        Category("HOODIES", "hoodieimage"),
+        Category("HATS", "hatimage"),
+        Category("DIGITAL", "digitalgoodsimage"),
+        Category("SHIRTS", "shirtimage"),
+        Category("HOODIES", "hoodieimage"),
+        Category("HATS", "hatimage"),
+        Category("DIGITAL", "digitalgoodsimage")
     )
+
     val hats = listOf(
             Product("Devslopes Graphic Beanie", "$18", "hat01"),
             Product("Devslopes Hat Black", "$20", "hat02"),
