@@ -18,8 +18,7 @@ import com.vinicius.coderswag.R
 class ProductsAdapter(val context: Context, val products: List<Product>) : RecyclerView.Adapter<ProductsAdapter.ProductHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ProductHolder {
-        val view = LayoutInflater.from(context)
-                .inflate(R.layout.product_list_item, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.product_list_item, parent, false)
         return ProductHolder(view)
     }
 

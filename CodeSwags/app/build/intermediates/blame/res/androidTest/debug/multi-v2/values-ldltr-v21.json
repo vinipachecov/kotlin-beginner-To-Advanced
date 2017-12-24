@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/vinicius/repos/kotlin-beginner-To-Advanced/CodeSwags/app/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-ldltr-v21/values-ldltr-v21.xml",
+            "map": [
+                {
+                    "source": "/home/vinicius/.gradle/caches/transforms-1/files-1.1/appcompat-v7-26.1.0.aar/5a5603034bf83ec4e5dd2968ae15b378/res/values-ldltr-v21/values-ldltr-v21.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "112",
+                        "endOffsets": "163"
+                    }
+                }
+            ]
+        }
+    ]
+}

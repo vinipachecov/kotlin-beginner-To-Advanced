@@ -22,18 +22,18 @@ class ProductsActivity : AppCompatActivity() {
         adapter = ProductsAdapter(this, DataService.getProducts(categorytype))
 
 
-        var spanCount = 2
-        val orientation = resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            spanCount = 3
-        }
-
-        val screenSize = resources.configuration.screenWidthDp
-
-        if (screenSize > 720) {
-             spanCount = 3
-        }
-        val layoutManager = GridLayoutManager(this, spanCount)
+//        var spanCount = 2
+//        val orientation = resources.configuration.orientation
+//        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            spanCount = 3
+//        }
+//
+//        val screenSize = resources.configuration.screenWidthDp
+//
+//        if (screenSize > 720) {
+//             spanCount = 3
+//        }
+        val layoutManager = GridLayoutManager(this, 2)
 
         productListView.layoutManager = layoutManager
         productListView.adapter = adapter
