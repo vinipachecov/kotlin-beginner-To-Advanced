@@ -9,11 +9,12 @@
     <ImageView
         android:id="@+id/categoryImage"
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_height="120dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/hatimage" />
@@ -26,7 +27,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="HATS"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
