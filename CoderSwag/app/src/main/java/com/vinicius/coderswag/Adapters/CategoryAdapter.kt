@@ -38,15 +38,12 @@ class CategoryAdapter(context: Context, categories: List<Category>) : BaseAdapte
         } else {
             holder = convertView.tag as ViewHolder
             categoryView = convertView
-
         }
 
         val category = categories[position]
-
-
+//        Get and set the image resources
         val resourceId = context.resources.getIdentifier(category.image, "drawable", context.packageName)
         holder.categoryImage?.setImageResource(resourceId)
-
         holder.categoryName?.text = category.title
         return categoryView
     }
