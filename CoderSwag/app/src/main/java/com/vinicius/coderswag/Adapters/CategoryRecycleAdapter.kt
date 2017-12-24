@@ -14,7 +14,8 @@ import com.vinicius.coderswag.R
  * Created by vinicius on 12/24/17.
  */
 
-class CategoryRecycleAdapter(val context: Context, val categories: List<Category>) : RecyclerView.Adapter<CategoryRecycleAdapter.Holder>() {
+//lambdas are first class functions, so they behave 'like' types! :)
+class CategoryRecycleAdapter(val context: Context, val categories: List<Category>, val itemClick: (Category) -> Unit) : RecyclerView.Adapter<CategoryRecycleAdapter.Holder>() {
 
 
 //   *Required Methods
@@ -36,14 +37,14 @@ class CategoryRecycleAdapter(val context: Context, val categories: List<Category
     val view = LayoutInflater.from(context)
             .inflate(R.layout.category_list_item, parent, false)
 //        attach to a our holder class to bind our resources later :)
-    return Holder(view)
+    return Holder(view,itemClick)
 
     }
 //    *Required Methods
 
 
     //    responsable for the binding
-    inner class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class Holder(itemView: View?, val itemClick: (Category) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
         val categoryImage = itemView?.findViewById<ImageView>(R.id.categoryImage)
         val categoryName = itemView?.findViewById<TextView>(R.id.categoryName)
@@ -58,6 +59,7 @@ class CategoryRecycleAdapter(val context: Context, val categories: List<Category
 //            set the values of the resources
             categoryImage?.setImageResource(resourceId)
             categoryName?.text = category.title
+            itemView.setOnClickListener{ itemClick(category) }
         }
     }
 }
