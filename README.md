@@ -15,5 +15,20 @@ This app is a case study for layouts using constraint layouts. It's just a layou
 * Using LandScape and Portrait layouts for both medium and X-Large screen resolutions
 
 ## Swoosh
-In construction....
+
+Swoosh is a couple of layouts app for a department store shop to show their products. 
+Technologies used
+
+* Recycler views
+* Data binding (ViewHolder)
+
+## Smack App
+
+Simple messenger app using Socket.IO. An API using Socket.IO in javascript helps to handle the requests and allow to store in a MongoDB all the persistent data.
+Feature
+
+* Register User
+* Login user
+* Create channels
+* Send Messages
 
