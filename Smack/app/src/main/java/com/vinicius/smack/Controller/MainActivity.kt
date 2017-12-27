@@ -24,6 +24,7 @@ import io.socket.client.IO
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     val socket = IO.socket(SOCKET_URL)
 
     lateinit var channelAdapter: ArrayAdapter<Channel>
+    var selectedChannel : Channel? = null
 
     private fun setupAdapters() {
         channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     private val userDataChangeReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
 
-            if (AuthService.isLogged) {
+            if (App.sharedPreferences.isLogged) {
                 //change ui parameters
                 usernameNavHeader.text = UserDataService.name
                 userEmailNavHeader.text = UserDataService.email
@@ -50,15 +52,24 @@ class MainActivity : AppCompatActivity() {
                 loginButtonNavHeader.text = "Logout"
                 userImageNavHeader.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
 
-                MessageService.getChannels(context) { complete ->
+                MessageService.getChannels { complete ->
                     if(complete) {
-                        channelAdapter.notifyDataSetChanged()
+                        if(MessageService.channels.count() > 0){
+                            selectedChannel = MessageService.channels[0]
+                            channelAdapter.notifyDataSetChanged()
+                            updateWithChannel()
+                        }
                     }
 
                 }
             }
         }
     }
+
+    fun updateWithChannel() {
+        mainChannelName.text = "#${selectedChannel?.name}"
+    }
+
 
 
     override fun onResume() {
@@ -86,6 +97,16 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         setupAdapters()
 
+        channel_list.setOnItemClickListener { _, _, i, l ->
+            selectedChannel = MessageService.channels[i]
+            drawer_layout.closeDrawer(GravityCompat.START)
+            updateWithChannel()
+        }
+
+        if(App.sharedPreferences.isLogged){
+            AuthService.findUserByEmail(this) {}
+
+        }
     }
 
     override fun onBackPressed() {
@@ -97,7 +118,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loginButtonNavClicked(view: View) {
-        if (AuthService.isLogged) {
+        if (App.sharedPreferences.isLogged) {
             UserDataService.logout()
             usernameNavHeader.text = ""
             userEmailNavHeader.text = ""
@@ -112,12 +133,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addChannelClicked(view: View) {
-        if (AuthService.isLogged) {
+        if (App.sharedPreferences.isLogged) {
             val builder = AlertDialog.Builder(this)
             val dialogview = layoutInflater.inflate(R.layout.add_channel_dialog, null)
 
             builder.setView(dialogview)
-                    .setPositiveButton("Add") { dialog: DialogInterface?, i: Int ->
+                    .setPositiveButton("Add") { _, _ ->
                         val nameTextField = dialogview.findViewById<EditText>(R.id.addChannelNameText)
                         val descTextField = dialogview.findViewById<EditText>(R.id.addChannelDescription)
                         val channelName = nameTextField.text.toString()
@@ -128,12 +149,11 @@ class MainActivity : AppCompatActivity() {
                         socket.emit("newChannel", channelName, channelDesc)
                         println(MessageService.channels)
                     }
-                    .setNegativeButton("Cancel") { dialog: DialogInterface?, i: Int ->
+                    .setNegativeButton("Cancel") { _ , _ ->
                         hideKeyboard()
 
                     }
                     .show()
-
         }
 
     }

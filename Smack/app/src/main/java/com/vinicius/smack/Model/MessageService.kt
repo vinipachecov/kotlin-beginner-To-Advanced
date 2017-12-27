@@ -5,6 +5,7 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.vinicius.smack.Controller.App
 import com.vinicius.smack.Services.AuthService
 import com.vinicius.smack.Utilities.URL_GET_CHANNELS
 import org.json.JSONArray
@@ -17,7 +18,7 @@ import org.json.JSONException
 object MessageService {
     val channels = ArrayList<Channel>()
 
-    fun getChannels(context: Context, complete: (Boolean) -> Unit) {
+    fun getChannels(complete: (Boolean) -> Unit) {
 
         val channelRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null, Response.Listener { response ->
 
@@ -48,12 +49,12 @@ object MessageService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                headers.put("Authorization", "Bearer ${AuthService.authToken}")
+                headers.put("Authorization", "Bearer ${App.sharedPreferences.authToken}")
                 return headers
             }
         }
 
-        Volley.newRequestQueue(context).add(channelRequest)
+        App.sharedPreferences.requestQeue.add(channelRequest)
 
     }
 }
