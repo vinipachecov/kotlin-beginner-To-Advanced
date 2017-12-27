@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.vinicius.smack.R
 import com.vinicius.smack.Services.AuthService
+import com.vinicius.smack.Services.UserDataService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
@@ -57,6 +58,8 @@ class CreateUserActivty : AppCompatActivity() {
 
     fun createUserClicked(view: View) {
 
+
+        val userName = createUserNameText.toString()
         val email = createEmailText.text.toString()
         val password = createPasswordText.text.toString()
 
@@ -67,9 +70,15 @@ class CreateUserActivty : AppCompatActivity() {
                     Toast.makeText(this,"User Created", Toast.LENGTH_SHORT).show()
                     AuthService.loginUser(this, email,password) {loginSuccess ->
                         if(loginSuccess){
-                            Toast.makeText(this,"User Created and sign in Sucess!", Toast.LENGTH_SHORT).show()
-                            println(AuthService.authToken)
-                            println(AuthService.userEmail)
+                          Toast.makeText(this,"User Created and sign in Sucess!", Toast.LENGTH_SHORT).show()
+                            AuthService.createUser(this, userName ,email,avatarColor,userAvatar) { createSucess ->
+                                if(createSucess) {
+                                    Toast.makeText(this,"User createeeed :)", Toast.LENGTH_SHORT).show()
+                                    println(UserDataService.avatarName)
+                                    finish()
+                                }
+
+                            }
                         }
                     }
                 }else {
