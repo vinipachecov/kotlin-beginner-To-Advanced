@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.vinicius.smack.Model.Channel
 import com.vinicius.smack.Model.MessageService
@@ -29,8 +30,16 @@ class MainActivity : AppCompatActivity() {
 
     val socket = IO.socket(SOCKET_URL)
 
+    lateinit var channelAdapter: ArrayAdapter<Channel>
+
+    private fun setupAdapters() {
+        channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
+        channel_list.adapter = channelAdapter
+    }
+
+
     private val userDataChangeReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(context: Context, intent: Intent?) {
 
             if (AuthService.isLogged) {
                 //change ui parameters
@@ -40,6 +49,13 @@ class MainActivity : AppCompatActivity() {
                 userImageNavHeader.setImageResource(resourceId)
                 loginButtonNavHeader.text = "Logout"
                 userImageNavHeader.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
+
+                MessageService.getChannels(context) { complete ->
+                    if(complete) {
+                        channelAdapter.notifyDataSetChanged()
+                    }
+
+                }
             }
         }
     }
@@ -61,16 +77,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         socket.connect()
-        socket.on("channelCreated", onNewChannel )
+        socket.on("channelCreated", onNewChannel)
 
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-        hideKeyboard()
+        setupAdapters()
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReceiver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
     }
 
     override fun onBackPressed() {
@@ -129,11 +144,9 @@ class MainActivity : AppCompatActivity() {
             val channelDesc = args[1] as String
             val channelId = args[2] as String
 
-            val newChannel = Channel(channelName,channelDesc,channelId)
+            val newChannel = Channel(channelName, channelDesc, channelId)
             MessageService.channels.add(newChannel)
-            println(newChannel.name)
-            println(newChannel.description)
-            println(newChannel.id)
+            channelAdapter.notifyDataSetChanged()
         }
     }
 
