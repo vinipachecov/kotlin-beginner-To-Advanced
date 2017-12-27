@@ -95,7 +95,7 @@
         android:layout_marginTop="24dp"
         android:background="@color/colorPrimary"
         android:onClick="generateColorClicked"
-        android:text="GenerateBackgrounColor"
+        android:text="Generate Background Color"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -117,4 +117,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/createSpinner"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="181dp"
+        tools:layout_editor_absoluteY="148dp" />
 </android.support.constraint.ConstraintLayout>
