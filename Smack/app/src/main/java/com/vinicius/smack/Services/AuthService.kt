@@ -113,6 +113,7 @@ object AuthService {
 
         val createRequest = object :JsonObjectRequest(Method.POST, URL_CREATE_USER, null,
                 Response.Listener { response ->
+                    println(response)
 
                     try {
                         UserDataService.name = response.getString("name")
