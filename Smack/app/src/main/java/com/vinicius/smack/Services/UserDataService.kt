@@ -1,6 +1,7 @@
 package com.vinicius.smack.Services
 
 import android.graphics.Color
+import com.vinicius.smack.Controller.App
 import java.util.*
 
 /**
@@ -41,9 +42,9 @@ object UserDataService {
         avatarName = ""
         email = ""
         name = ""
-        AuthService.authToken = ""
-        AuthService.userEmail = ""
-        AuthService.isLogged = false
+        App.sharedPreferences.authToken = ""
+        App.sharedPreferences.userEmail = ""
+        App.sharedPreferences.isLogged = false
 
     }
 }

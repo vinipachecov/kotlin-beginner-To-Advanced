@@ -70,13 +70,13 @@ class CreateUserActivty : AppCompatActivity() {
 
 
         if (userName.isNotEmpty() && email.isNotBlank() && password.isNotBlank()) {
-            AuthService.registerUser(this, email, password) { registerSuccess ->
+            AuthService.registerUser( email, password) { registerSuccess ->
                 if (registerSuccess) {
                     Toast.makeText(this,"User Created", Toast.LENGTH_SHORT).show()
-                    AuthService.loginUser(this, email,password) {loginSuccess ->
+                    AuthService.loginUser( email,password) {loginSuccess ->
                         if(loginSuccess){
                           Toast.makeText(this,"User Created and sign in Sucess!", Toast.LENGTH_SHORT).show()
-                            AuthService.createUser(this, userName ,email,avatarColor,userAvatar) { createSucess ->
+                            AuthService.createUser( userName ,email,avatarColor,userAvatar) { createSucess ->
                                 if(createSucess) {
 
                                     val userDataChange  = Intent(BROADCAST_USER_DATA_CHANGE)
