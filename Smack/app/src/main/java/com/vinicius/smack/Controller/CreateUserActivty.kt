@@ -4,9 +4,11 @@ import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.vinicius.smack.R
 import com.vinicius.smack.Services.AuthService
 import kotlinx.android.synthetic.main.activity_create_user.*
+import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
 
 class CreateUserActivty : AppCompatActivity() {
@@ -51,17 +53,32 @@ class CreateUserActivty : AppCompatActivity() {
         val savegB = b.toDouble() / 255
 
         avatarColor = "[$savedR, $savedG, $savegB]"
-        println(avatarColor)
     }
 
     fun createUserClicked(view: View) {
-        println("clicked")
-        AuthService.registerUser(this, "vini@v.com","123456") { complete ->
-            if (complete) {
 
+        val email = createEmailText.text.toString()
+        val password = createPasswordText.text.toString()
+
+
+        if (email.isNotBlank() && password.isNotBlank()) {
+            AuthService.registerUser(this, email, password) { registerSuccess ->
+                if (registerSuccess) {
+                    Toast.makeText(this,"User Created", Toast.LENGTH_SHORT).show()
+                    AuthService.loginUser(this, email,password) {loginSuccess ->
+                        if(loginSuccess){
+                            Toast.makeText(this,"User Created and sign in Sucess!", Toast.LENGTH_SHORT).show()
+                            println(AuthService.authToken)
+                            println(AuthService.userEmail)
+                        }
+                    }
+                }else {
+                    Toast.makeText(this,"Error creating user!", Toast.LENGTH_SHORT).show()
+                }
             }
+        } else {
+            Toast.makeText(this, "Complete all fields!", Toast.LENGTH_SHORT)
         }
-
     }
 
 }
