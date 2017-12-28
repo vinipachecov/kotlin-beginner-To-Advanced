@@ -3,18 +3,20 @@ package com.vinicius.smack.Controller
 import android.content.*
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Message
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.LinearLayout
+import com.vinicius.smack.Adapters.MessageAdapter
 import com.vinicius.smack.Model.Channel
-import com.vinicius.smack.Model.MessageService
+import com.vinicius.smack.Services.MessageService
 import com.vinicius.smack.R
 import com.vinicius.smack.Services.AuthService
 import com.vinicius.smack.Services.UserDataService
@@ -32,11 +34,19 @@ class MainActivity : AppCompatActivity() {
     val socket = IO.socket(SOCKET_URL)
 
     lateinit var channelAdapter: ArrayAdapter<Channel>
-    var selectedChannel : Channel? = null
+    var selectedChannel: Channel? = null
+    lateinit var messageAdapter : MessageAdapter
 
     private fun setupAdapters() {
         channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
         channel_list.adapter = channelAdapter
+
+        messageAdapter = MessageAdapter(this, MessageService.messages)
+        messageListView.adapter = messageAdapter
+
+        val layoutManager = LinearLayoutManager(this)
+        messageListView.layoutManager = layoutManager
+
     }
 
 
@@ -53,8 +63,8 @@ class MainActivity : AppCompatActivity() {
                 userImageNavHeader.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
 
                 MessageService.getChannels { complete ->
-                    if(complete) {
-                        if(MessageService.channels.count() > 0){
+                    if (complete) {
+                        if (MessageService.channels.count() > 0) {
                             selectedChannel = MessageService.channels[0]
                             channelAdapter.notifyDataSetChanged()
                             updateWithChannel()
@@ -68,8 +78,20 @@ class MainActivity : AppCompatActivity() {
 
     fun updateWithChannel() {
         mainChannelName.text = "#${selectedChannel?.name}"
-    }
+//        download all the messages for the channel
+        selectedChannel?.let{
+            MessageService.getMessages(selectedChannel!!.id) { complete ->
+                if(complete) {
+                    messageAdapter.notifyDataSetChanged()
+                    if(messageAdapter.itemCount > 0) {
 
+//                        scroll to the last item
+                        messageListView.smoothScrollToPosition(messageAdapter.itemCount -1)
+                    }
+                }
+            }
+        }
+    }
 
 
     override fun onResume() {
@@ -89,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         socket.connect()
         socket.on("channelCreated", onNewChannel)
+        socket.on("messageCreated", onNewMessage)
 
 
         val toggle = ActionBarDrawerToggle(
@@ -103,7 +126,7 @@ class MainActivity : AppCompatActivity() {
             updateWithChannel()
         }
 
-        if(App.sharedPreferences.isLogged){
+        if (App.sharedPreferences.isLogged) {
             AuthService.findUserByEmail(this) {}
 
         }
@@ -119,6 +142,8 @@ class MainActivity : AppCompatActivity() {
 
     fun loginButtonNavClicked(view: View) {
         if (App.sharedPreferences.isLogged) {
+            channelAdapter.notifyDataSetChanged()
+            messageAdapter.notifyDataSetChanged()
             UserDataService.logout()
             usernameNavHeader.text = ""
             userEmailNavHeader.text = ""
@@ -147,13 +172,38 @@ class MainActivity : AppCompatActivity() {
 
                         //Create channel with the channel name and description
                         socket.emit("newChannel", channelName, channelDesc)
-                        println(MessageService.channels)
                     }
-                    .setNegativeButton("Cancel") { _ , _ ->
+                    .setNegativeButton("Cancel") { _, _ ->
                         hideKeyboard()
 
                     }
                     .show()
+        }
+
+    }
+
+    private val onNewMessage = Emitter.Listener { args ->
+        if (App.sharedPreferences.isLogged) {
+            runOnUiThread {
+                val channelId = args[2] as String
+                if (channelId == selectedChannel?.id) {
+                    val msgBody = args[0] as String
+                    val userName = args[3] as String
+                    val userAvatar = args[4] as String
+                    val userAvatarColor = args[5] as String
+                    val id = args[6] as String
+                    val timeStamp = args[7] as String
+
+                    val newMessage = com.vinicius.smack.Model.Message(msgBody, userName, channelId, userAvatar, userAvatarColor, id, timeStamp)
+                    MessageService.messages.add(newMessage)
+                    messageAdapter.notifyDataSetChanged()
+
+                    messageListView.smoothScrollToPosition(messageAdapter.itemCount -1)
+                }
+
+
+            }
+
         }
 
     }
@@ -171,7 +221,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sendMsgBtnClicked(view: View) {
-        hideKeyboard()
+        if (App.sharedPreferences.isLogged && messageTextField.text.isNotEmpty() && selectedChannel != null) {
+            val userId = UserDataService.id
+            val channelId = selectedChannel!!.id
+            socket.emit("newMessage", messageTextField.text.toString(), userId, channelId,
+                    UserDataService.name, UserDataService.avatarName, UserDataService.avatarColor)
+            messageTextField.text.clear()
+            hideKeyboard()
+        }
     }
 
     private fun hideKeyboard() {
