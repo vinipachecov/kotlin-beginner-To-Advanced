@@ -24,8 +24,7 @@ Technologies used
 
 ## Smack App
 
-Simple messenger app using Socket.IO. An API using Socket.IO in javascript helps to handle the requests and allow to store in a MongoDB all the persistent data.
-Feature
+Simple messenger app using Socket.IO. An API using Socket.IO in javascript helps to handle the requests and allow to store in a MongoDB all the persistent data. Features:
 
 * Register User
 * Login user
