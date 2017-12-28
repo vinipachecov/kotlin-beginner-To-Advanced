@@ -6,10 +6,12 @@ import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.vinicius.smack.Controller.App
+import com.vinicius.smack.Model.Message
 import com.vinicius.smack.Utilities.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -20,9 +22,8 @@ import org.json.JSONObject
 
 object AuthService {
 
-//    var authToken: String = ""
-//    var isLogged = false
-//    var userEmail: String = ""
+
+
 
     fun registerUser(email: String, password: String, complete: (Boolean) -> Unit) {
 
@@ -189,6 +190,8 @@ object AuthService {
 
         App.sharedPreferences.requestQeue.add(findUserRequest)
     }
+
+
 
 
 
